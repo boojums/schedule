@@ -6,9 +6,18 @@ import csv
 start = dt.date(2019,3,4)
 end = dt.date(2019,6,13)
 
+# Default block names
+block_names = ['Block 1', 'Block 2', 'Block 3', 'Block 4',
+               'Block 5', 'Block 6', 'Block 7']
+
 # Customize what to call each block ("Subject" in a GCal item)
-block_names = ['Block 1', 'Game Prog (2)', 'Block 3', 'Intro (4)',
-               'Intro (5)', 'Block 6', 'Block 7']
+# and set the days it meets
+block_info = [None,
+              {'name': 'Game Prog (2)', 'blue': [2,3,5], 'white': [1,3]},
+              None,
+              {'name': 'Intro (4)', 'blue': [], 'white': []},
+              {'name': 'Intro (5)', 'blue': [], 'white': []},
+              None, None, None]
 
 # Schedule definitions
 blue_weeks = [1,3,6,9,11,13,15,18,20,22,24]
@@ -64,15 +73,21 @@ with open('schedule.csv', mode='w') as f:
 
         if week in blue_weeks:
             blocks = blue_blocks[dow - 1]
+            color = 'blue'
         elif week in white_weeks:
             blocks = white_blocks[dow - 1]
+            color = 'white'
         else:
             continue
 
         for i in range(len(blocks)):
             period = periods[i]
-            subject = block_names[blocks[i] - 1]
-            sched_writer.writerow([subject, d, period[0], d, period[1]])
+            info = block_info[blocks[i] - 1]
+            if not info:
+                continue
+            if dow not in info[color]:
+                continue
+            sched_writer.writerow([info['name'], d, period[0], d, period[1]])
 
             #period_dt = periods_dt[i]
             #starttime = dt.datetime(d.year,d.month,d.day,period_dt[0][0],period_dt[0][1])
