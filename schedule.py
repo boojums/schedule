@@ -13,11 +13,11 @@ block_names = ['Block 1', 'Block 2', 'Block 3', 'Block 4',
 # Customize what to call each block ("Subject" in a GCal item)
 # and set the days it meets
 block_info = [None,
-              {'name': 'Game Prog (2)', 'blue': [2,3,5], 'white': [1,3]},
+              {'name': 'Game Prog (2)', 'blue': [2,3,5], 'white': [1,3], 'lunch':'early'},
               None,
-              {'name': 'Intro (4)', 'blue': [], 'white': []},
-              {'name': 'Intro (5)', 'blue': [], 'white': []},
-              None, None, None]
+              {'name': 'Intro (4)', 'blue': [2,4], 'white': [1,2,4], 'lunch':'early'},
+              {'name': 'Intro (5)', 'blue': [3,5], 'white': [2,3,5], 'lunch':'early'},
+              None, None]
 
 # Schedule definitions
 blue_weeks = [1,3,6,9,11,13,15,18,20,22,24]
@@ -65,9 +65,11 @@ with open('schedule.csv', mode='w') as f:
         week = d.isocalendar()[1]
         dow = d.isocalendar()[2]
 
+        # days with no classes
         if d in specials:
             continue
 
+        # weekend
         if dow > 5:
             continue
 
@@ -87,7 +89,18 @@ with open('schedule.csv', mode='w') as f:
                 continue
             if dow not in info[color]:
                 continue
-            sched_writer.writerow([info['name'], d, period[0], d, period[1]])
+
+            start = period[0]
+            end = period[1]
+
+            if i == 3 and info['lunch'] == 'early':
+                start = "11:08"
+                end = "12:01"
+            elif i==3 and info['lunch'] == 'late':
+                start = "11:38"
+                end = "12:31"
+                
+            sched_writer.writerow([info['name'], d, start, d, end])
 
             #period_dt = periods_dt[i]
             #starttime = dt.datetime(d.year,d.month,d.day,period_dt[0][0],period_dt[0][1])
