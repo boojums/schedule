@@ -11,7 +11,7 @@ block_names = ['Block 1', 'Block 2', 'Block 3', 'Block 4',
                'Block 5', 'Block 6', 'Block 7']
 
 # Customize what to call each block ("Subject" in a GCal item)
-# and set the days it meets
+# and set the days it meets (Monday=1)
 block_info = [None,
               {'name': 'Game Prog (2)', 'blue': [2,3,5], 'white': [1,3], 'lunch':'early'},
               None,
@@ -39,14 +39,6 @@ white_blocks = [[3,4,2,1,7,6],
                 [2,3,5,7],
                 [3,1,4,5,7,6],
                 [1,2,5,4,6,7]]
-
-# Use these to generate full datetimes (not used)
-periods_dt = [[(7,50),(8,55)],
-           [(9,00),(9,53)],
-           [(9,58),(11,3)],
-           [(11,8),(12,31)],
-           [(12,36),(13,41)],
-           [(13,46),(14,39)]]
 
 # Use these since Google seems to want separate date and time strings
 periods = [["7:50","8:55"],
@@ -101,8 +93,3 @@ with open('schedule.csv', mode='w') as f:
                 end = "12:31"
                 
             sched_writer.writerow([info['name'], d, start, d, end])
-
-            #period_dt = periods_dt[i]
-            #starttime = dt.datetime(d.year,d.month,d.day,period_dt[0][0],period_dt[0][1])
-            #endtime = dt.datetime(d.year,d.month,d.day,period_dt[1][0],period_dt[1][1])
-            #print(f"{starttime} - {endtime}: Block {blocks[i]}")
