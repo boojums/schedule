@@ -1,7 +1,7 @@
 ## Schedule Maker 
-### for Aspen to Google Calendar csv
+### for the weird LS schedule
 
-Create a csv for import into Google Calendar with all classes for the year. 
+Create a csv for import into Google Calendar with all classes for the year. make_schedule.py does so with Aspen inputs. schedule.py for manual naming/scheduling.
 
 ### Dependencies: 
 - python3
