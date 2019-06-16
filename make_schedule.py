@@ -9,8 +9,7 @@ The script requires python3 and the pandas library.
 '''
 
 import argparse
-from os import listdir
-from os.path import isfile, join
+from os import listdir, makedirs, path
 import csv
 import re
 import datetime as dt
@@ -48,11 +47,14 @@ dates_frame['Date'] = pandas.to_datetime(dates_frame['Date'],
 dates_frame['Date'] = dates_frame['Date'].dt.date
 
 
-def create_csv_for_file(infile, outfile=None):
+def create_csv_for_file(infile, outdir=None):
 
-    if not outfile:
-        basename = infile.rsplit('.', 1)[0]
-        outfile = basename + '_gcal.csv'
+    infile_naked = infile.rsplit('.', 1)[0]
+    outfile = infile_naked + '_gcal.csv'
+    if outdir:
+        basename = path.basename(outfile)
+        outfile = path.join(outdir, basename)
+        print(outfile)
 
     # individual teacher file
     teacher_frame = pandas.read_csv(infile, dtype={'SecNo': str})
@@ -113,15 +115,23 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--directory", type=str, help="process all files in a directory")
     parser.add_argument("-f", "--file", type=str, help="process a single file")
+    parser.add_argument("-o", "--output", type=str, help="output directory")
     args = parser.parse_args()
 
-    if args.directory:
-        allfiles = [f for f in listdir(args.directory) if isfile(join(args.directory, f))]
-        for infile in allfiles:
-            create_csv_for_file(infile)
+    # create output directory if specified and doesn't already exist
+    output_dir = None
+    if args.output:
+        if not path.exists(args.output):
+            makedirs(args.output)
+        output_dir = args.output
 
+    if args.directory:
+        allfiles = [path.join(args.directory, f) for f in listdir(args.directory) if path.isfile(path.join(args.directory, f))]
+        print(allfiles)
+        for infile in allfiles:
+            create_csv_for_file(infile, outdir=output_dir)
     elif args.file:
-        create_csv_for_file(args.file)
+        create_csv_for_file(args.file, outdir=output_dir)
     else:
         print("Must include either a single csv file or a directory of csv files")
 
