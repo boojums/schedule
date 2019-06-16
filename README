@@ -1,1 +1,6 @@
-Create a csv with events for all classes on the LS schedule.
+Create a csv for import into Google Calendar with all classes for the year. 
+
+Dependencies: 
+python3
+pandas
+
